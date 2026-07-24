@@ -1,17 +1,23 @@
 <?php
 
-namespace App\View\Components;
+namespace App\Services;
 
-use Illuminate\View\Component;
-use Illuminate\View\View;
+use App\Contracts\AIServiceInterface;
 
-class AppLayout extends Component
+class ChatService 
 {
-    /**
-     * Get the view / contents that represents the component.
-     */
-    public function render(): View
+    
+    public function __construct(
+        protected AIServiceInterface $aiService
+    ) {
+    }
+
+    /*
+        Handle chat message 
+    */
+
+    public function SendMessage(string $message) : string 
     {
-        return view('layouts.app');
+        return $this->aiService->generateResponse($message);
     }
 }

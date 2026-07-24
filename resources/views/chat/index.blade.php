@@ -95,20 +95,27 @@
 
     <div class="mx-auto max-w-6xl">
 
-        <div class="flex items-center rounded-3xl bg-white shadow-lg border border-gray-200 px-3 py-3">
+        <form id="chatForm">
+            @csrf
 
-            <input
-                type="text"
-                placeholder="Ask anything..."
-                class="flex-1 bg-transparent px-4 py-3 text-black placeholder:text-black/50 focus:outline-none">
+            <div class="flex items-center rounded-3xl bg-white shadow-lg border border-gray-200 px-3 py-3">
 
-            <button
-                class="h-12 w-12 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center transition">
+                <input
+                    id="message"
+                    type="text"
+                    placeholder="Ask anything..."
+                    class="flex-1 bg-transparent px-4 py-3 text-black placeholder:text-black/50 focus:outline-none">
 
-                →
-            </button>
+                <button
+                    type="submit"
+                    class="h-12 w-12 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center transition">
 
-        </div>
+                    →
+                </button>
+
+            </div>
+
+        </form>
 
     </div>
 
@@ -117,3 +124,53 @@
 </div>
 
 @endsection
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const chatForm = document.getElementById('chatForm');
+
+    if (!chatForm) {
+        console.error('chatForm not found');
+        return;
+    }
+
+    chatForm.addEventListener('submit', async function (e) {
+
+        e.preventDefault();
+
+        const message = document.getElementById('message').value;
+
+        try {
+
+            const response = await fetch('/chat/send', {
+
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document
+                        .querySelector('meta[name="csrf-token"]')
+                        .content
+                },
+
+                body: JSON.stringify({
+                    message: message
+                })
+
+            });
+
+            const data = await response.json();
+
+            console.log("response".data);
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    });
+
+});
+</script>
